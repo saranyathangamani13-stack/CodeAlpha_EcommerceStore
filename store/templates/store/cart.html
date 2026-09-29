@@ -1,0 +1,73 @@
+{% extends 'store/base.html' %}
+{% block title %}Your bag — Good Form Supply{% endblock %}
+{% block content %}
+<section class="section-wrap page-section">
+  <p class="eyebrow">Good choices</p>
+  <h1 class="page-title">Your bag <span class="title-count">{{ cart_count }} items</span></h1>
+
+  {% if lines %}
+    <div class="cart-layout">
+      <div class="cart-lines">
+        {% for line in lines %}
+          <article class="cart-line">
+            <a class="cart-thumb" href="{% url 'product_detail' line.product.slug %}">
+              <img src="{{ line.product.image_url }}" alt="{{ line.product.name }}">
+            </a>
+
+            <div class="cart-item-info">
+              <span class="eyebrow">{{ line.product.category }}</span>
+              <a href="{% url 'product_detail' line.product.slug %}">{{ line.product.name }}</a>
+              <span>${{ line.product.price }}</span>
+
+              <form method="post" action="{% url 'cart_update' %}" class="quantity-form">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" value="{{ line.product.id }}">
+                <input type="hidden" name="action" value="update">
+                <label class="visually-hidden" for="qty-{{ line.product.id }}">Quantity for {{ line.product.name }}</label>
+                <input id="qty-{{ line.product.id }}" type="number" name="quantity" value="{{ line.quantity }}" min="1" max="{{ line.product.stock }}">
+                <button type="submit">Update</button>
+              </form>
+            </div>
+
+            <strong class="line-total">${{ line.line_total }}</strong>
+
+            <form method="post" action="{% url 'cart_update' %}" class="remove-form">
+              {% csrf_token %}
+              <input type="hidden" name="product_id" value="{{ line.product.id }}">
+              <input type="hidden" name="action" value="remove">
+              <button type="submit" aria-label="Remove {{ line.product.name }}">×</button>
+            </form>
+          </article>
+        {% endfor %}
+
+        <a class="continue-link" href="{% url 'home' %}#shop">← Continue shopping</a>
+      </div>
+
+      <aside class="order-summary">
+        <p class="eyebrow">The short version</p>
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span>${{ total }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Shipping</span>
+          <span>Calculated at checkout</span>
+        </div>
+        <div class="summary-total">
+          <span>Total</span>
+          <strong>${{ total }}</strong>
+        </div>
+        <a class="button button-dark button-wide" href="{% url 'checkout' %}">Continue to checkout <span>↗</span></a>
+        <p class="fine-print">Demo checkout. No payment details are collected.</p>
+      </aside>
+    </div>
+  {% else %}
+    <div class="empty-bag">
+      <span class="empty-mark">○</span>
+      <h2>Your next favorite is out there.</h2>
+      <p>Your bag is empty for now. Take a look around.</p>
+      <a class="button button-dark" href="{% url 'home' %}#shop">Explore the collection <span>↗</span></a>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

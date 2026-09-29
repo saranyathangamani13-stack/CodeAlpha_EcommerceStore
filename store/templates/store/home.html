@@ -1,0 +1,77 @@
+{% extends 'store/base.html' %}
+{% block title %}Good Form Supply — useful things, made with care{% endblock %}
+{% block content %}
+<section class="hero">
+  <img class="hero-image" src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=2200&q=90" alt="Warm, sunlit living room with thoughtfully chosen furniture">
+  <div class="hero-copy">
+    <p class="eyebrow">Objects for the everyday</p>
+    <h1>Make room<br>for the good.</h1>
+    <p>Considered pieces for the rituals, rhythms, and little moments that make a place yours.</p>
+    <a class="button button-light" href="#shop">Explore the collection <span aria-hidden="true">↘</span></a>
+  </div>
+  <div class="hero-index">No. 01 <span>/</span> The everyday edit</div>
+</section>
+
+<section class="intro-strip" aria-label="Shop values">
+  <span>Well-made, always</span>
+  <i></i>
+  <span>Small things, big feeling</span>
+  <i></i>
+  <span>Designed to be lived with</span>
+</section>
+
+<section class="collection section-wrap" id="shop">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">The collection</p>
+      <h2>Keep good company.</h2>
+    </div>
+
+    <form class="search-form" method="get" action="{% url 'home' %}">
+      {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+      <label class="visually-hidden" for="product-search">Search the collection</label>
+      <input id="product-search" type="search" name="q" placeholder="Search pieces" value="{{ search }}">
+      <button aria-label="Search" type="submit">↗</button>
+    </form>
+  </div>
+
+  <div class="category-tabs" aria-label="Filter by category">
+    <a class="{% if not selected_category %}active{% endif %}" href="{% url 'home' %}#shop">All pieces</a>
+    {% for value, label in categories %}
+      <a class="{% if selected_category == value %}active{% endif %}" href="?category={{ value }}#shop">{{ label }}</a>
+    {% endfor %}
+  </div>
+
+  {% if products %}
+    <div class="product-grid">
+      {% for product in products %}
+      <article class="product-card">
+        <a class="product-image" href="{% url 'product_detail' product.slug %}">
+          <img src="{{ product.image_url }}" alt="{{ product.name }}" loading="lazy">
+          <span class="image-arrow" aria-hidden="true">↗</span>
+        </a>
+        <div class="product-meta">
+          <span>{{ product.category }}</span>
+          <span>{{ product.stock }} in stock</span>
+        </div>
+        <div class="product-name-price">
+          <a href="{% url 'product_detail' product.slug %}">{{ product.name }}</a>
+          <span>${{ product.price }}</span>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-results">
+      <p class="eyebrow">Nothing here just yet</p>
+      <h3>Try another search.</h3>
+      <a href="{% url 'home' %}#shop">See all pieces <span>↗</span></a>
+    </div>
+  {% endif %}
+</section>
+
+<section class="note-band">
+  <p>“A few good things<br>are always enough.”</p>
+  <span>Thoughtfully selected<br>for everyday living.</span>
+</section>
+{% endblock %}

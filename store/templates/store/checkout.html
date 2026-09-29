@@ -1,0 +1,66 @@
+{% extends 'store/base.html' %}
+{% block title %}Checkout — Good Form Supply{% endblock %}
+{% block content %}
+<section class="section-wrap page-section">
+  <p class="eyebrow">Almost yours</p>
+  <h1 class="page-title">Delivery details</h1>
+
+  <div class="checkout-layout">
+    <form method="post" class="checkout-form">
+      {% csrf_token %}
+      <h2>Where should we send it?</h2>
+
+      <label for="full_name">Full name</label>
+      <input id="full_name" name="full_name" value="{{ initial_name }}" autocomplete="name" required>
+
+      <label for="email">Email address</label>
+      <input id="email" name="email" type="email" value="{{ initial_email }}" autocomplete="email" required>
+
+      <label for="shipping_address">Street address</label>
+      <input id="shipping_address" name="shipping_address" autocomplete="street-address" required>
+
+      <div class="field-row">
+        <div>
+          <label for="city">City</label>
+          <input id="city" name="city" autocomplete="address-level2" required>
+        </div>
+        <div>
+          <label for="postal_code">Postal code</label>
+          <input id="postal_code" name="postal_code" autocomplete="postal-code" required>
+        </div>
+      </div>
+
+      <p class="payment-note">
+        <span>◇</span>
+        <span>
+          <strong>Demo checkout</strong><br>
+          No real payment gateway is connected. Placing this order records it and updates inventory, but does not charge you.
+        </span>
+      </p>
+
+      <button class="button button-dark button-wide" type="submit">Place demo order <span>↗</span></button>
+    </form>
+
+    <aside class="order-summary checkout-summary">
+      <p class="eyebrow">In your bag</p>
+      {% for line in lines %}
+        <div class="checkout-item">
+          <div class="checkout-thumb">
+            <img src="{{ line.product.image_url }}" alt="{{ line.product.name }}">
+          </div>
+          <div>
+            <strong>{{ line.product.name }}</strong>
+            <span>Qty {{ line.quantity }}</span>
+          </div>
+          <span>${{ line.line_total }}</span>
+        </div>
+      {% endfor %}
+
+      <div class="summary-total">
+        <span>Total</span>
+        <strong>${{ total }}</strong>
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'store/base.html' %}
+{% block title %}Create account — Good Form Supply{% endblock %}
+{% block content %}
+<section class="auth-section">
+  <div class="auth-panel">
+    <p class="eyebrow">Join the good list</p>
+    <h1>Make yourself at home.</h1>
+    <p class="auth-intro">Create an account to check out and follow your orders.</p>
+
+    <form method="post" class="auth-form">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+
+      <label for="id_username">Username</label>
+      {{ form.username }}
+      {{ form.username.errors }}
+
+      <label for="id_password1">Password</label>
+      {{ form.password1 }}
+      {{ form.password1.errors }}
+
+      <label for="id_password2">Confirm password</label>
+      {{ form.password2 }}
+      {{ form.password2.errors }}
+
+      <button class="button button-dark button-wide" type="submit">Create account <span>↗</span></button>
+    </form>
+
+    <p class="auth-switch">Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
+  </div>
+</section>
+{% endblock %}

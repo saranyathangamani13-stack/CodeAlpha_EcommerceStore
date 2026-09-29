@@ -1,0 +1,41 @@
+{% extends 'store/base.html' %}
+{% block title %}Order {{ order.reference }} — Good Form Supply{% endblock %}
+{% block content %}
+<section class="section-wrap page-section order-detail-page">
+  <p class="eyebrow">Order placed · {{ order.created_at|date:'F j, Y' }}</p>
+  <h1 class="page-title">Thank you, {{ order.full_name }}.</h1>
+  <p class="confirmation-note">Your order <strong>#{{ order.reference }}</strong> is confirmed. This demo does not collect payment.</p>
+
+  <div class="checkout-layout">
+    <div class="order-items-list">
+      {% for item in order.items.all %}
+        <div class="checkout-item">
+          <div class="checkout-thumb">
+            <img src="{{ item.product.image_url }}" alt="{{ item.product_name }}">
+          </div>
+          <div>
+            <strong>{{ item.product_name }}</strong>
+            <span>Qty {{ item.quantity }}</span>
+          </div>
+          <span>${{ item.unit_price }}</span>
+        </div>
+      {% endfor %}
+    </div>
+
+    <aside class="order-summary">
+      <p class="eyebrow">Delivery</p>
+      <p>{{ order.full_name }}<br>{{ order.shipping_address }}<br>{{ order.city }}, {{ order.postal_code }}<br>{{ order.email }}</p>
+      <div class="summary-total">
+        <span>Status</span>
+        <strong>{{ order.status }}</strong>
+      </div>
+      <div class="summary-total">
+        <span>Total</span>
+        <strong>${{ order.total }}</strong>
+      </div>
+    </aside>
+  </div>
+
+  <a class="continue-link" href="{% url 'orders' %}">← All orders</a>
+</section>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'store/base.html' %}
+{% block title %}Your orders — Good Form Supply{% endblock %}
+{% block content %}
+<section class="section-wrap page-section">
+  <p class="eyebrow">The good things</p>
+  <h1 class="page-title">Your orders</h1>
+
+  {% if orders %}
+    <div class="order-list">
+      {% for order in orders %}
+        <a class="order-row" href="{% url 'order_detail' order.reference %}">
+          <span>
+            <strong>#{{ order.reference }}</strong>
+            <small>{{ order.created_at|date:'F j, Y' }}</small>
+          </span>
+          <span class="status-pill">{{ order.status }}</span>
+          <strong>${{ order.total }}</strong>
+          <span aria-hidden="true">↗</span>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-bag">
+      <span class="empty-mark">○</span>
+      <h2>Nothing on the way. Yet.</h2>
+      <p>Your orders will show up here once you've found something you love.</p>
+      <a class="button button-dark" href="{% url 'home' %}#shop">Browse the collection <span>↗</span></a>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'store/base.html' %}
+{% block title %}{{ product.name }} — Good Form Supply{% endblock %}
+{% block content %}
+<div class="section-wrap detail-wrap">
+  <a class="back-link" href="{% url 'home' %}#shop">← Back to the collection</a>
+
+  <section class="product-detail">
+    <div class="detail-image">
+      <img src="{{ product.image_url }}" alt="{{ product.name }}">
+    </div>
+
+    <div class="detail-copy">
+      <p class="eyebrow">{{ product.category }} · Good Form selection</p>
+      <h1>{{ product.name }}</h1>
+      <p class="detail-price">${{ product.price }}</p>
+
+      <div class="rule"></div>
+
+      <p class="description">{{ product.description }}</p>
+
+      <p class="stock-note">
+        {% if product.stock %}
+          In stock · ships in 2–4 days
+        {% else %}
+          Currently out of stock
+        {% endif %}
+      </p>
+
+      {% if product.stock %}
+      <form method="post" class="add-form">
+        {% csrf_token %}
+        <label for="quantity">Qty</label>
+        <input id="quantity" name="quantity" type="number" min="1" max="{{ product.stock }}" value="1">
+        <button class="button button-dark" type="submit">Add to bag <span>↗</span></button>
+      </form>
+      {% endif %}
+
+      <p class="fine-print">Complimentary shipping on orders over $100. Easy returns within 30 days.</p>
+    </div>
+  </section>
+</div>
+{% endblock %}

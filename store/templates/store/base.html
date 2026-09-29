@@ -1,0 +1,56 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f4ef">
+  <title>{% block title %}Good Form Supply{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'store/store.css' %}">
+</head>
+<body>
+  <div class="announcement">Thoughtful essentials for everyday living <span>·</span> Complimentary shipping over $100</div>
+
+  <header class="site-header">
+    <a class="wordmark" href="{% url 'home' %}">good form<span>.</span></a>
+
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="{% url 'home' %}#shop">Shop all</a>
+      <a href="{% url 'home' %}?category=Home#shop">Home</a>
+      <a href="{% url 'home' %}?category=Desk#shop">Desk</a>
+      <a href="{% url 'home' %}?category=Travel#shop">Travel</a>
+      <a href="{% url 'home' %}?category=Wear#shop">Wear</a>
+    </nav>
+
+    <div class="header-actions">
+      {% if user.is_authenticated %}
+        <a class="account-link" href="{% url 'orders' %}">Orders</a>
+        <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="text-button" type="submit">Sign out</button></form>
+      {% else %}
+        <a class="account-link" href="{% url 'login' %}">Sign in</a>
+      {% endif %}
+      <a class="bag-link" href="{% url 'cart' %}" aria-label="Shopping bag, {{ cart_count }} items">Bag <span>{{ cart_count }}</span></a>
+    </div>
+  </header>
+
+  <main>
+    {% if messages %}
+      <div class="messages" aria-live="polite">
+        {% for message in messages %}
+          <p class="message {{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <a class="wordmark" href="{% url 'home' %}">good form<span>.</span></a>
+    <p>Useful things, made with care.</p>
+    <small>Demo store · Checkout does not collect payment details.</small>
+  </footer>
+</body>
+</html>
